@@ -134,6 +134,7 @@ void CCrackSyscptDlg::OnBnClickedOk()
 		return;
 	}else
 		mMessage += _T("Target: ") + CString(filePath) + _T("\r\n");
+	UpdateData(false);
 
 	if (fseek(inFileStream, 0, SEEK_END) != 0) {
 		fclose(inFileStream);
@@ -152,16 +153,19 @@ void CCrackSyscptDlg::OnBnClickedOk()
 	unsigned long pos = FindBytes(data, size);
 	if (pos < 0) {
 		mMessage += _T("Failed to find the bytes.\r\n");
+		UpdateData(false);
 		return;
 	}
 	mMessage += _T("Find the bytes.\r\n");
 	for (int i = 0; i < sizeof(ALTER); i++) {
 		data[pos + i] = ALTER[i];
 	}
+	UpdateData(false);
 	if (rename(filePath, filePathBak) != 0)
 		return;
 	mMessage += _T("Backup to:\r\n\t");
 	mMessage += CString(filePathBak) +_T("\r\n");
+	UpdateData(false);
 	err = fopen_s(&outFileStream, filePath, "wb");
 	if (err != 0)
 		return;
@@ -171,6 +175,7 @@ void CCrackSyscptDlg::OnBnClickedOk()
 		return;
 	mMessage += _T("Wrote to:\r\n\t");
 	mMessage += CString(filePath) +_T("\r\n");
+	UpdateData(false);
 	//CDialogEx::OnOK();
 }
 
